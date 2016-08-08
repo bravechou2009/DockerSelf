@@ -1,6 +1,6 @@
 FROM hucaeah0.cn.hpecorp.net:16688/deco_centos_7_systemd:V1.0
 
-MAINTAINER deco_dev_team <dev@jijiangspace.com>
+MAINTAINER
 
 # This dockerfile is suitable for installing MantisBT
 # for production use. The script will also look for /data volume
@@ -8,7 +8,7 @@ MAINTAINER deco_dev_team <dev@jijiangspace.com>
 
 ENV http_proxy="http://web-proxy:8080" https_proxy="http://web-proxy:8080" container="docker" TERM="xterm"
 
-LABEL version="V1.0" 
+LABEL version="V1.0"
 
 
 # -----------------------------------------------------------------------------
@@ -16,15 +16,15 @@ LABEL version="V1.0"
 # -----------------------------------------------------------------------------
 ENV	MANTISBT_VERSION="1.3.0" \
 	MANTISBT_APP_PATH="/app"
-	
-	
+
+
 # -----------------------------------------------------------------------------
-# Copy the required script files 
+# Copy the required script files
 # -----------------------------------------------------------------------------
 
 COPY ./scripts/ /tmp/scripts/
 COPY ./vendor/ /tmp/vendor/
-RUN cp /tmp/scripts/*.sh /root/ 
+RUN cp /tmp/scripts/*.sh /root/
 
 
 # -----------------------------------------------------------------------------
@@ -48,11 +48,11 @@ RUN yum clean all && \
         postfix \
         mysql mysql-devel \
         httpd httpd-devel mod_php mod_ssl
-    
 
-	
+
+
 # -----------------------------------------------------------------------------
-# Global MantisBT configuration 
+# Global MantisBT configuration
 # -----------------------------------------------------------------------------
 
 RUN mkdir -p -m 750 ${MANTISBT_APP_PATH} \
@@ -64,7 +64,7 @@ RUN mkdir -p -m 750 ${MANTISBT_APP_PATH} \
 	&& cp /tmp/vendor/config_inc.php -rf ${MANTISBT_APP_PATH}/mantisbt/
 
 
-	
+
 
 # -----------------------------------------------------------------------------
 # Global Apache configuration changes
@@ -75,7 +75,7 @@ RUN sed -i \
 	-e 's~^NameVirtualHost \(.*\)$~#NameVirtualHost \1~g' \
 	/etc/httpd/conf/httpd.conf
 
-	
+
 # -----------------------------------------------------------------------------
 # Disable Apache directory indexes
 # -----------------------------------------------------------------------------
@@ -97,8 +97,8 @@ RUN sed -i \
 RUN useradd -r -M -d ${MANTISBT_APP_PATH} -s /sbin/nologin app \
 	&& useradd -r -M -d ${MANTISBT_APP_PATH} -s /sbin/nologin -G apache,app app-www \
 	&& usermod -a -G app-www app \
-	&& usermod -a -G app-www,app apache	
-	
+	&& usermod -a -G app-www,app apache
+
 # -----------------------------------------------------------------------------
 # Disable Apache language based content negotiation
 # -----------------------------------------------------------------------------
@@ -174,15 +174,15 @@ RUN sed \
 	-e 's~^;date.timezone =$~date.timezone = UTC~g' \
 	/etc/php.d/00-php.ini.default \
 	> /etc/php.d/00-php.ini
-	
+
 
 RUN ln -sf \
 	/usr/share/zoneinfo/Asia/Shanghai \
-	/etc/localtime 
-	
+	/etc/localtime
+
 RUN sed -i \
 	-e 's/;date\.timezone =/date.timezone = Asia\/Shanghai/' \
-	/etc/php.ini	
+	/etc/php.ini
 
 RUN sed -i \
 	 -e "s/variables_order.*/variables_order = \"EGPCS\"/g" \
@@ -196,7 +196,7 @@ RUN sed -i \
 RUN systemctl enable httpd.service
 
 
-	
+
 
 EXPOSE 80 443
 
