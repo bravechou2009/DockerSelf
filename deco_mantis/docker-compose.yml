@@ -1,0 +1,29 @@
+version: '2'
+services:
+  db:
+    image: mysql:latest
+    volumes:
+#      - "./.data/db:/docker-entrypoint-initdb.d"
+#      - "./.data/db:/var/lib/mysql"
+       - "/usr/mysql/data:/var/lib/mysql" 
+    container_name: mantisbt_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: bugtracker
+      MYSQL_USER: mantisbt
+      MYSQL_PASSWORD: mantisbt
+
+  mantisbt:
+    depends_on:
+      - db
+    image: hucaeah0.cn.hpecorp.net:16688/deco_mantis:V1.0
+    volumes:
+      - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+    links:   
+      - db
+    ports:
+      - "8989:80"
+    privileged: true
+    container_name: mantisbt_portal
+    restart: always     
