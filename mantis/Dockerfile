@@ -1,6 +1,6 @@
 FROM hucaeah0.cn.hpecorp.net:16688/deco_centos_7_systemd:V1.0
 
-MAINTAINER
+MAINTAINER bravechou2009@gmail.com
 
 # This dockerfile is suitable for installing MantisBT
 # for production use. The script will also look for /data volume
